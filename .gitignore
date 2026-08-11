@@ -1,0 +1,3 @@
+# Environment variables and credentials must never be committed.
+srcs/.env
+secrets/*.txt
