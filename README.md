@@ -21,10 +21,9 @@ They talk to each other over a private Docker network. Two named volumes hold
 the state that must survive a restart: the database files and the WordPress
 site files. Both are stored on the host under `/home/zzin/data`.
 
-> **Build status:** the repository currently contains the project skeleton —
-> directory layout, git ignore rules, environment/secrets files and the
-> Makefile. The Dockerfiles and `docker-compose.yml` are added service by
-> service in the following commits.
+Full setup and operating instructions are split across
+[USER_DOC.md](USER_DOC.md) — running and using the site — and
+[DEV_DOC.md](DEV_DOC.md) — building, modifying and troubleshooting it.
 
 ## Instructions
 

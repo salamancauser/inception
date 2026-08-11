@@ -1,0 +1,20 @@
+[mysqld]
+user                    = mysql
+pid-file                = /run/mysqld/mysqld.pid
+socket                  = /run/mysqld/mysqld.sock
+basedir                 = /usr
+datadir                 = /var/lib/mysql
+tmpdir                  = /tmp
+lc-messages-dir         = /usr/share/mysql
+
+# Listen on every interface. The Debian default is 127.0.0.1, which would
+# accept only connections from inside this container — the wordpress
+# container reaches us across the docker network, so that default must go.
+bind-address            = 0.0.0.0
+
+# Do not reverse-resolve connecting IPs. Saves a DNS round trip per
+# connection and avoids stalls when resolution is slow.
+skip-name-resolve
+
+[client-server]
+socket                  = /run/mysqld/mysqld.sock

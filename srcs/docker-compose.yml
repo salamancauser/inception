@@ -1,0 +1,99 @@
+services:
+
+  mariadb:
+    # The subject requires the image name to match the service name.
+    image: mariadb
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    env_file: .env
+    secrets:
+      - db_root_password
+      - db_password
+    volumes:
+      # The database data directory — this is what must survive a restart.
+      - db_data:/var/lib/mysql
+    networks:
+      - inception
+    # No `ports:` — 3306 is reachable only from inside the docker network.
+    restart: always
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+    env_file: .env
+    secrets:
+      - db_password
+      - credentials
+    volumes:
+      - wp_files:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      # Ordering only. It does NOT wait for MariaDB to accept queries —
+      # the entrypoint's ping loop does that.
+      - mariadb
+    restart: always
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    env_file: .env
+    ports:
+      # The single door into the whole infrastructure.
+      - "443:443"
+    volumes:
+      # Same volume as wordpress: nginx serves the static files, php-fpm
+      # executes the PHP. Both need the files on disk.
+      - wp_files:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    restart: always
+
+volumes:
+  # Named volumes, not bind mounts — but the subject also requires the data to
+  # land in /home/<login>/data. Those are reconciled with the local driver's
+  # options: this is a real named volume with a lifecycle of its own
+  # (docker volume ls/inspect/rm), that happens to be backed by a host path.
+  db_data:
+    name: db_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/mariadb
+
+  wp_files:
+    name: wp_files
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH}/wordpress
+
+networks:
+  # A user-defined bridge network. Docker runs an embedded DNS server on it,
+  # so containers resolve each other by service name — which is why
+  # `fastcgi_pass wordpress:9000` and MYSQL_HOST=mariadb work with no linking.
+  # Host networking is forbidden here: it would drop the network namespace
+  # entirely and expose 3306 and 9000 directly on the VM.
+  inception:
+    name: inception
+    driver: bridge
+
+secrets:
+  # Read from the host at `docker compose up` time and mounted read-only at
+  # /run/secrets/<name>. They never enter an image layer and never appear in
+  # `docker inspect` — unlike anything passed through the environment.
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  db_password:
+    file: ../secrets/db_password.txt
+  credentials:
+    file: ../secrets/credentials.txt
