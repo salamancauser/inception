@@ -20,6 +20,46 @@ Companion page (same content as Session 1, nicer to read):
 
 Drill score from Session 1: __ / 8 answered before opening.
 
+Questions I could not answer: ______________________________________
+
+---
+
+## Handoff — read this first if you are a fresh Claude session
+
+Context that is not in the repo:
+
+- **The project is finished, built, and verified working.** It passes all 38
+  checks in `tools/test.sh`. Do not rewrite, refactor or "improve" the code.
+  The remaining work is comprehension, not implementation.
+- **The student had never used Docker before this project.** The code was
+  written with heavy assistance. The defense is therefore the risk, not the
+  build.
+- **Tight deadline.** Do not pad. An explicit "do NOT do this" list is part of
+  every session — the 3-hour tutorial, forums, and reading other repos are
+  time sinks at this stage and should be named as such.
+- **Goal is passing the 42 defense**, nothing more.
+
+The method that works, established in session 1:
+
+1. **Teach against their own running stack**, not generic tutorials. Run the
+   commands first, paste the *real* output into the plan. Never write "you
+   should see roughly…" — verify it.
+2. **~2 hours per session**, in three blocks: short input (~30 min), long
+   hands-on (~60 min), then a drill (~25 min).
+3. **End every session with 8 questions** answered aloud without notes, each
+   mapped back to the exercise that proves it. The score is the handoff signal
+   for sizing the next session.
+4. **Correct wrong mental models explicitly** rather than talking around them.
+5. Deliver as an Artifact page *and* append it to this file, so it survives a
+   machine change.
+
+Before starting a session, ask for: the previous drill score, and which
+questions were missed. Size the next session from that — a 7–8 means merge and
+compress; a low score means re-do part of the previous session first.
+
+Sessions 2–6 below are outlines only. Session 1 is the worked example of the
+format to follow.
+
 ---
 
 ## Setting up on a new laptop
